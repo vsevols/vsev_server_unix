@@ -141,9 +141,6 @@ while True:
         # Вызываем функцию для удаления файлов, созданных менее 10 минут назад
         delete_files_created_within_last_10_minutes(log_dir)
 
-        # Вызываем функцию для архивирования файлов, если свободное место недостаточно
-        archive_files_if_low_disk_space(log_dir, threshold_mb)
-
         # Вызываем функцию для удаления файлов из "arc", если не хватает места на диске
         delete_files_in_arc_if_low_disk_space(log_dir, threshold_mb)
 
