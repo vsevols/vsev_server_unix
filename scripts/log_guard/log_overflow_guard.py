@@ -14,7 +14,7 @@ def delete_files_with_invalid_slash(path):
             entry_path = os.path.join(path, entry)
 
             # Проверяем, является ли entry файлом и начинается ли имя с "jh\"
-            if os.path.isfile(entry_path) and entry.startswith("jh\"):
+            if os.path.isfile(entry_path) and entry.startswith("jh\\"):
                 try:
                     # Удаляем файл
                     os.remove(entry_path)
