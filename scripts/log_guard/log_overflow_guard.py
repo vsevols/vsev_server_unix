@@ -49,45 +49,44 @@ def archive_files_if_low_disk_space(log_dir, archive_dir, threshold_mb):
             files = os.listdir(log_dir)
             files.sort(key=lambda x: os.path.getctime(os.path.join(log_dir, x)))
 
-                for file_name in files:
-                    file_path = os.path.join(log_dir, file_name)
-                    if os.path.isfile(file_path):
-                        # Проверяем, был ли файл создан менее 10 минут назад
-                        if (time.time() - os.path.getctime(file_path)) < 600:
-                            try:
-                                # Удаляем файл
-                                os.remove(file_path)
-                                print(f"Файл {file_path} успешно удален, так как он был создан менее 10 минут назад.")
-                                continue
-                            except Exception as e:
-                                print(f"Ошибка при удалении файла {file_path}: {e}")
-
-                    # Создаем архивный файл с сжатием
-
-                    archive_file = os.path.join(arc_dir, f"archive_{time.strftime('%Y%m%d%H%M%S')}.zip")
-
-                    with zipfile.ZipFile(archive_file, 'w', zipfile.ZIP_DEFLATED) as archive:
-
+            for file_name in files:
+                file_path = os.path.join(log_dir, file_name)
+                if os.path.isfile(file_path):
+                    # Проверяем, был ли файл создан менее 10 минут назад
+                    if (time.time() - os.path.getctime(file_path)) < 600:
                         try:
-
-                            # Пытаемся добавить файл в архив
-
-                            archive.write(file_path, os.path.basename(file_path))
-                            print(f"Файл {file_path} добавлен в архив {archive_file}")
-
-                            # Удаляем исходный файл
+                            # Удаляем файл
                             os.remove(file_path)
-                            print(f"Файл {file_path} удален.")
+                            print(f"Файл {file_path} успешно удален, так как он был создан менее 10 минут назад.")
+                            continue
+                        except Exception as e:
+                            print(f"Ошибка при удалении файла {file_path}: {e}")
 
-                            except Exception as e:
+                # Создаем архивный файл с сжатием
 
-                            print(f"Ошибка при архивировании файла {file_path}: {e}")
+                archive_file = os.path.join(arc_dir, f"archive_{time.strftime('%Y%m%d%H%M%S')}.zip")
 
-                            # Если не хватает места для архивации, удаляем исходный файл
+                with (zipfile.ZipFile(archive_file, 'w', zipfile.ZIP_DEFLATED) as archive):
 
-                            os.remove(file_path)
+                    try:
 
-                            print(f"Файл {file_path} удален из-за нехватки места на диске.")
+                        # Пытаемся добавить файл в архив
+
+                        archive.write(file_path, os.path.basename(file_path))
+                        print(f"Файл {file_path} добавлен в архив {archive_file}")
+
+                        # Удаляем исходный файл
+                        os.remove(file_path)
+                        print(f"Файл {file_path} удален.")
+
+                    except Exception as e:
+                        print(f"Ошибка при архивировании файла {file_path}: {e}")
+
+                    # Если не хватает места для архивации, удаляем исходный файл
+
+                    os.remove(file_path)
+
+                    print(f"Файл {file_path} удален из-за нехватки места на диске.")
 
 
                     # Пересчитываем свободное место на диске
